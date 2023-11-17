@@ -1,0 +1,158 @@
+class CustomHangman {
+    field String secretWord;
+    field String revealedLetters;
+
+    constructor CustomHangman new() {
+        var String hangman;
+        var String guesses;
+        var int index;
+        var int wordLength;
+
+        let hangman = "CustomHangman";
+        let guesses = "Guessed Letters:";
+        let index = 0;
+
+        let secretWord = "PUZZLE";
+        let revealedLetters = String.new(secretWord.length());
+        
+        while (index < secretWord.length()) {
+            let revealedLetters = revealedLetters.appendChar(219);
+            let index = index + 1;
+        }
+        
+        do Output.printString(hangman);
+        do Output.println();
+        do Output.println();
+        do Output.printString(guesses);
+        do Output.println();
+        return this;
+    }
+
+    method void playGame() {
+        var boolean gameOver;
+        var int line, incorrectGuesses;
+        var char userGuess;
+
+        let incorrectGuesses = 0;
+        let line = 15;
+        let gameOver = 0;
+        
+        do drawHangPost();
+
+        while (~(gameOver)) {
+            do Output.printString(revealedLetters);
+            do Output.moveCursor(line, 15);
+            let line = line + 1;
+            let userGuess = Keyboard.readChar();
+            do Output.println();
+            
+            if (~(isCorrectGuess(userGuess))) {
+                if (incorrectGuesses = 0) {
+                    do drawHead();
+                }
+                if (incorrectGuesses = 1) {
+                    do drawTorso();
+                }
+                if (incorrectGuesses = 2) {
+                    do drawRightArm();
+                }
+                if (incorrectGuesses = 3) {
+                    do drawLeftArm();
+                }
+                if (incorrectGuesses = 4) {
+                    do drawRightLeg();
+                }
+                if (incorrectGuesses = 5) {
+                    do drawLeftLeg();
+                    do Output.printString("GAME OVER!");
+                    let gameOver = -1;
+                }
+                let incorrectGuesses = incorrectGuesses + 1;
+            }
+            if (isWin()) {
+                do Output.printString("You win!");
+                let gameOver = -1;
+            }
+        }
+        return;
+    }
+
+    method boolean isWin() {
+        var int index;
+        let index = 0;
+        
+        while (index < revealedLetters.length()) {
+            if (revealedLetters.charAt(index) = 219) {
+                return 0;
+            }
+            let index = index + 1;
+        }
+        return -1;
+    }
+
+    method boolean isCorrectGuess(char guess) {
+        var int index;
+        let index = 0;
+        
+        while (index < secretWord.length()) {
+            if (guess = secretWord.charAt(index)) {
+                do revealedLetters.setCharAt(index, guess);
+                return -1;
+            }
+            let index = index + 1;
+        }
+        return 0;
+    }
+
+    method void drawHangPost() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(30, 20, 150, 30);
+        do Screen.drawRectangle(80, 10, 90, 150);
+        do Screen.drawRectangle(20, 8, 90, 10);
+        do Screen.drawRectangle(20, 8, 30, 15);
+        return;
+    }
+
+    method void drawHead() {
+        do Screen.drawCircle(30, 45, 15);
+        return;
+    }
+
+    method void drawTorso() {
+        do Screen.drawLine(30, 60, 30, 90);
+        return;
+    }
+
+    method void drawRightArm() {
+        do Screen.drawLine(30, 75, 45, 70);
+        return;
+    }
+
+    method void drawLeftArm() {
+        do Screen.drawLine(30, 75, 15, 70);
+        return;
+    }
+
+    method void drawRightLeg() {
+        do Screen.drawLine(30, 90, 45, 110);
+        return;
+    }
+
+    method void drawLeftLeg() {
+        do Screen.drawLine(30, 90, 15, 110);
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void main() {
+        var CustomHangman hangmanGame;
+        let hangmanGame = CustomHangman.new();
+        do hangmanGame.playGame();
+        do hangmanGame.dispose();
+        return;
+    }
+}
